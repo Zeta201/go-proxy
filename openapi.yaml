@@ -1,0 +1,51 @@
+openapi: "3.0.0"
+info:
+  title: Proxy Service
+  version: 1.0.0
+  description: |
+    A simple proxy service that fetches the contents of a given URL and returns the response.
+servers:
+  - url: http://localhost:8080
+paths:
+  /proxy:
+    post:
+      summary: Proxy a request to another URL
+      description: >
+        Accepts a JSON body with a `url` field.  
+        The server fetches the content from that URL and returns the response, including headers and status code.
+      tags:
+        - proxy
+      requestBody:
+        description: JSON payload containing the target URL
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+                  format: uri
+                  description: The URL to fetch
+              required:
+                - url
+      responses:
+        '200':
+          description: Successful proxy response
+          content:
+            "*/*":
+              schema:
+                type: string
+                description: Raw response body from the proxied URL (content type may vary)
+        '400':
+          description: Invalid request (e.g., missing or malformed `url`)
+          content:
+            text/plain:
+              schema:
+                type: string
+        '502':
+          description: Failed to fetch the target URL
+          content:
+            text/plain:
+              schema:
+                type: string
