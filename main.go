@@ -19,7 +19,7 @@ func proxyHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if payload.URL == "" {
-		http.Error(w, "missing url", http.StatusBadRequest)
+		http.Error(w, "missing url. ensure you pass a valid url", http.StatusBadRequest)
 		return
 	}
 
@@ -31,7 +31,7 @@ func proxyHandler(w http.ResponseWriter, r *http.Request) {
 	// Make the request
 	resp, err := client.Get(payload.URL)
 	if err != nil {
-		http.Error(w, "failed to fetch url: "+err.Error(), http.StatusBadGateway)
+		http.Error(w, "failed to fetch url from the payload: "+err.Error(), http.StatusBadGateway)
 		return
 	}
 	defer resp.Body.Close()
